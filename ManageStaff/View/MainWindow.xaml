@@ -1,0 +1,50 @@
+﻿<Window x:Class="ManageStaff.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ManageStaff.View" xmlns:viewmodel="clr-namespace:ManageStaff.ViewModel" xmlns:local1="clr-namespace:ManageStaff.Model" d:DataContext="{d:DesignInstance Type=viewmodel:StaffViewModel}"
+        mc:Ignorable="d"
+        Title="Управление сотрудниками" Height="300" Width="500">   
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <DataGrid Name="Employees" Grid.Row="0" ItemsSource="{Binding Employees}"
+                  SelectedItem="{Binding SelectedEmployee}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Сотрудник" Binding="{Binding Name}"/>                
+                <DataGridTemplateColumn Header="Статус">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button x:Name="StatusButton" Content="{Binding StatusView}" 
+                                    Command="{Binding Path=DataContext.EditEmployee, 
+                                    RelativeSource={RelativeSource AncestorType={x:Type DataGrid},
+                                    Mode=FindAncestor}}"/>                                                          
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>                
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Row="1" Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Обновить" Command="{Binding UpdateData}" Margin="5,5,5,5"/>
+        </StackPanel>
+    </Grid>
+    <Window.Resources>        
+        <Style TargetType="Button">                       
+            <Style.Triggers>               
+                <DataTrigger Binding="{Binding ElementName=StatusButton, Path=Content}"  Value="Работает">
+                    <Setter Property="Background" Value="Green"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=StatusButton, Path=Content}"  Value="Отсутствует">
+                    <Setter Property="Background" Value="Red"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+</Window>
